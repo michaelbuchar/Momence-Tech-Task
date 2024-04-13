@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, {Router} from 'express';
 import serverless from 'serverless-http';
 import fetch from 'node-fetch';
 import cors from 'cors';
@@ -11,7 +11,7 @@ app.use(cors()); // To get around the CORS issue in the frontend
 
 router.get('/currency-rates', async (req, res) => {
     try {
-        const response = await fetch(URL); // forwards URL
+        const response = await fetch(URL); // Forwards URL
         const data = await response.text();
         res.send(data);
     } catch (error) { // Some basic error handling
