@@ -44,7 +44,8 @@ describe('CurrencyConverter component', () => {
         // Check if conversion result is displayed
         const result = '4.20';
         await waitFor(() => {
-            expect(getByText(`100 CZK is equal to ${result} USD`)).toBeInTheDocument();
+            expect(getByText(`100 CZK`)).toBeInTheDocument();
+            expect(getByText(`= ${result} USD`)).toBeInTheDocument();
         });
     });
 
@@ -71,11 +72,12 @@ describe('CurrencyConverter component', () => {
         // Check if conversion result is displayed
         const result = '100.00';
         await waitFor(() => {
-            expect(getByText(`${input} CZK is equal to ${result} TRY`)).toBeInTheDocument();
+            expect(getByText(`${input} CZK`)).toBeInTheDocument();
+            expect(getByText(`= ${result} TRY`)).toBeInTheDocument();
         });
     });
 
-    it('converts negative amount correctly', async () => {
+    it('does not convert negative amount', async () => {
         const {getByText, getByPlaceholderText, getByRole} = render(<App/>);
         // Simulate data loading
         await waitFor(() => {
@@ -95,10 +97,10 @@ describe('CurrencyConverter component', () => {
         const convertButton = getByText('Convert');
         fireEvent.click(convertButton);
 
-        // Check if conversion result is displayed
-        const result = '-1.00';
+        // Check if conversion did not happen
         await waitFor(() => {
-            expect(getByText(`${input} CZK is equal to ${result} AUD`)).toBeInTheDocument();
+            expect(() => getByText(`${input} CZK`))
+                .toThrow(`Unable to find an element with the text: ${input} CZK. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.`);
         });
     });
 
@@ -122,10 +124,10 @@ describe('CurrencyConverter component', () => {
         const convertButton = getByText('Convert');
         fireEvent.click(convertButton);
 
-        // Check if conversion result is displayed
-        const result = 'NaN';
+        // Check if conversion did not happen
         await waitFor(() => {
-            expect(getByText(`${input} CZK is equal to ${result} AUD`)).toBeInTheDocument();
+            expect(() => getByText(`${input} CZK`))
+                .toThrow(`Unable to find an element with the text: ${input} CZK. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.`);
         });
     });
 });
