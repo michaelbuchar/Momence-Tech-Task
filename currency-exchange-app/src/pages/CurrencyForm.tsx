@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import useCurrencyRates from '../store/useCurrencyRates'; // importing custom hook to fetch currency rates
+import useCurrencyRates from '../store/useCurrencyRates'; // Importing custom hook to fetch currency rates
 import TableContainer from '@mui/material/TableContainer'
 import TableCell from '@mui/material/TableCell'
 import styled from 'styled-components';
 import {TableBody, TableHead, TableRow, Table} from "@mui/material";
 
-// styled components
+// Styled components
 const Container = styled.div`
   max-width: 600px;
   margin: 0 auto;
@@ -62,7 +62,7 @@ const Button = styled.button`
     cursor: not-allowed;
     background-color: #cccccc;
     color: #666666;
-}
+    }
   }
 `;
 
@@ -87,24 +87,37 @@ const ConversionText = styled.span`
 `;
 
 const CurrencyConverter: React.FC = () => {
-    const {data, isLoading} = useCurrencyRates(); // using our backend
-    const [amountToConvert, setAmountToConvert] = useState(''); // amount displayed in form
-    const [amount, setAmount] = useState(''); // amount that will be converted
-    const [currency, setCurrency] = useState(''); // currency that will be converted
-    const [selectedCurrency, setSelectedCurrency] = useState('AUD'); // currency selected
-    const [convertedAmount, setConvertedAmount] = useState<number | null>(null); // amount displayed to the user
-    const [validInput, setValidInput] = useState(false); // validating input text
+    /* using our backend */
+    const {data, isLoading} = useCurrencyRates();
 
-    if (isLoading) return <div>Loading data...</div>; // loading page for user experience
+    /* amount displayed in form */
+    const [amountToConvert, setAmountToConvert] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => { // handling of submit button
+    /* amount that will be converted */
+    const [amount, setAmount] = useState('');
+
+    /* currency that will be converted */
+    const [currency, setCurrency] = useState('');
+
+    /* currency selected */
+    const [selectedCurrency, setSelectedCurrency] = useState('AUD');
+
+    /* amount displayed to the user */
+    const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
+
+    /* validating input text form */
+    const [validInput, setValidInput] = useState(false);
+
+    if (isLoading) return <div>Loading data...</div>;
+
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!amountToConvert || !selectedCurrency || !data) return; // if this data is not provided, do not convert
         setAmount(amountToConvert); // store amount so that the result does not change based on the input
         setCurrency(selectedCurrency); // store currency so that does not change on input again
         const splitData = data.split('\n').map(line => line.split('|'));
         const selectedRate = splitData.find(row => row[3] === selectedCurrency);
-        if (!selectedRate) return "Currency Not Found"; // basic error handling - could not find currency
+        if (!selectedRate) return "Currency Not Found";
         const rate = parseFloat(selectedRate[4]) / parseFloat(selectedRate[2]); // compute rate = foreign currency rate / CZK rate
         const converted = parseFloat(amountToConvert) / rate;
         setConvertedAmount(converted);
@@ -124,7 +137,7 @@ const CurrencyConverter: React.FC = () => {
             <Form onSubmit={handleSubmit}>
                 <Input type="text" value={amountToConvert} onChange={(e) => {
                     const input = e.target.value;
-                    if (/^\d*\.?\d*$/.test(input)) { // allow only numbers (with optional decimal point)
+                    if (/^\d*\.?\d*$/.test(input)) { // allow only numbers with optional decimal point
                         setAmountToConvert(input);
                         setValidInput(true);
                     }
@@ -132,17 +145,14 @@ const CurrencyConverter: React.FC = () => {
                        placeholder="Enter amount in CZK"
                 />
                 <Select value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
-                    {data?.split('\n').slice(2, -1).map(line => { // display only code in form
+                    {data?.split('\n').slice(2, -1).map(line => { // remove first two rows and the last row from data
                         const [, , , code,] = line.split('|');
-                        return <option key={code}>{code}</option>;
+                        return <option key={code}>{code}</option>; // display only code in form
                     })}
                 </Select>
                 <Button type="submit" disabled={!validInput}>Convert</Button>
             </Form>
             {convertedAmount !== null && (
-                // <ConvertedAmount>
-                //     {amount} CZK is equal to {convertedAmount.toFixed(2)} {currency}
-                // </ConvertedAmount>
                 <ConversionResult>
                     <AmountText>{amount} CZK </AmountText>
                     <ConversionText>= {convertedAmount.toFixed(2)} {currency}</ConversionText>
@@ -153,24 +163,35 @@ const CurrencyConverter: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{fontWeight: '600', fontSize: '1rem', padding: '8px',
+                            <TableCell sx={{
+                                fontWeight: '600', /* add nice formatting for the table */
+                                fontSize: '1rem',
+                                padding: '8px',
                                 borderBottom: '3px solid rgba(224, 224, 224, 1)',
-                                borderTop: '3px solid rgba(224, 224, 224, 1)'}}>Currency</TableCell>
-                            <TableCell sx={{fontWeight: '600', fontSize: '1rem', padding: '8px',
+                                borderTop: '3px solid rgba(224, 224, 224, 1)'
+                            }}>Currency</TableCell>
+                            <TableCell sx={{
+                                fontWeight: '600',
+                                fontSize: '1rem',
+                                padding: '8px',
                                 borderBottom: '3px solid rgba(224, 224, 224, 1)',
-                                borderTop: '3px solid rgba(224, 224, 224, 1)'}}>Rate</TableCell>
+                                borderTop: '3px solid rgba(224, 224, 224, 1)'
+                            }}>Rate</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {data?.split('\n').slice(2, -1).map(line => {
                             const [country, currency, currencyAmount, code, CZKAmount] = line.split('|');
                             return (
-                                <TableRow key={code} sx={{'&: last-child td, &: last-child th': {border: 0},
-                                    '&:nth-of-type(odd)' : {backgroundColor: 'white'},
-                                    '&:nth-of-type(even)' : {backgroundColor: '#f2f2f2'},
-                                }} >
-                                    <TableCell sx={{padding: '8px'}}>{country} {capitalize(currency)} ({code})</TableCell>
-                                    <TableCell sx={{padding: '8px'}}>{currencyAmount} {code} = {CZKAmount} CZK </TableCell>
+                                <TableRow key={code} sx={{
+                                    '&: last-child td, &: last-child th': {border: 0}, // last child does not have a border
+                                    '&:nth-of-type(odd)': {backgroundColor: 'white'},
+                                    '&:nth-of-type(even)': {backgroundColor: '#f2f2f2'}, // change background color every other row
+                                }}>
+                                    <TableCell
+                                        sx={{padding: '8px'}}>{country} {capitalize(currency)} ({code})</TableCell>
+                                    <TableCell
+                                        sx={{padding: '8px'}}>{currencyAmount} {code} = {CZKAmount} CZK </TableCell>
                                 </TableRow>
                             );
                         })}
