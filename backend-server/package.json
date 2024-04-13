@@ -1,17 +1,30 @@
 {
   "name": "backend-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Michael Buchar",
   "license": "ISC",
   "dependencies": {
+    "@netlify/functions": "^2.6.0",
+    "@types/express": "^4.17.21",
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "node-fetch": "^3.3.2"
-  }
+    "node-fetch": "^3.3.2",
+    "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelbuchar/Momence-Tech-Task.git#main"
+  },
+  "bugs": {
+    "url": "https://github.com/michaelbuchar/Momence-Tech-Task/issues"
+  },
+  "homepage": "https://github.com/michaelbuchar/Momence-Tech-Task/tree/main#readme",
+  "description": ""
 }
