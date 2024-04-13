@@ -67,9 +67,8 @@ const CurrencyConverter: React.FC = () => {
     const [amountToConvert, setAmountToConvert] = useState(''); // amount displayed in form
     const [amount, setAmount] = useState(''); // amount that will be converted
     const [currency, setCurrency] = useState(''); // currency that will be converted
-    const [selectedCurrency, setSelectedCurrency] = useState('AUD'); // currency selected //TODO
+    const [selectedCurrency, setSelectedCurrency] = useState('AUD'); // currency selected
     const [convertedAmount, setConvertedAmount] = useState<number | null>(null); // amount displayed to the user
-    console.log(selectedCurrency);
 
     if (isLoading) return <div>Loading data...</div>; // loading page for user experience
 
