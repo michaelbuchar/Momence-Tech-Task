@@ -11,7 +11,12 @@ router.use('/', (req, res, next) => {
     console.log('i am inside server');
     next();
 });
-router.get("/hello", (req, res) => res.send("Hello World!"));
+exports.handler = async function(event, context) {
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Hello World from serverless function!" })
+    };
+};
 
 api.use("/api/", router);
 
